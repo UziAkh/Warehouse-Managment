@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions | 3PL Management System | Spantik Inc.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="transactions.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <h1 class="app-title">3PL Management System</h1>
+        <p class="app-subtitle">Spantik Inc.</p>
+      </div>
+      <nav class="main-nav">
+  <ul style="display: flex; list-style: none; gap: 2rem; margin: 0; padding: 0;">
+    <li><a href="index.html" class="active" style="color: #4f46e5; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Dashboard</a></li>
+    <li><a href="transactions.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Transactions</a></li>
+    <li><a href="barcode-scan.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Barcode Scanner</a></li>
+    <li><a href="update-upcs.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Update UPCs</a></li>
+    <li><a href="clients.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Clients</a></li>
+  </ul>
+</nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Inventory Transactions</h1>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-title">Total Inbound</div>
+        <div class="stat-value" id="totalInbound">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Total Outbound</div>
+        <div class="stat-value" id="totalOutbound">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Recent Transactions</div>
+        <div class="stat-value" id="recentTransactions">0</div>
+      </div>
+    </div>
+
+    <section class="controls">
+      <div class="button-group">
+        <button id="createInboundBtn" class="btn primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+          Record Inbound
+        </button>
+        <button id="createOutboundBtn" class="btn secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+          </svg>
+          Record Outbound
+        </button>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search transactions...">
+        <button id="searchBtn" class="btn secondary">Search</button>
+      </div>
+    </section>
+
+    <section class="products-container">
+      <div class="container-header">
+        <h2>Transaction History</h2>
+        <div class="filter-controls">
+          <select id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="inbound">Inbound Only</option>
+            <option value="outbound">Outbound Only</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="loading-container" id="loadingIndicator">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Loading transaction data...
+        </div>
+      </div>
+      
+      <div class="responsive-table">
+        <table id="transactionsTable">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Type</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Before</th>
+              <th>After</th>
+              <th>Reference</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsTableBody">
+            <!-- Transactions will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="empty-state hidden" id="noTransactions">
+        <div class="empty-icon">📋</div>
+        <h3 class="empty-title">No transactions found</h3>
+        <p class="empty-description">There are no inventory transactions recorded yet.</p>
+        <div class="button-group">
+          <button class="btn primary" id="emptyInboundBtn">Record Inbound</button>
+          <button class="btn secondary" id="emptyOutboundBtn">Record Outbound</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transaction Modal -->
+    <div id="transactionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Record Inbound Transaction</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="transactionForm">
+            <input type="hidden" id="transactionType" value="inbound">
+            <div class="form-group">
+              <label for="productSelect">Product</label>
+              <select id="productSelect" class="form-control" required>
+                <option value="">Select a product</option>
+                <!-- Products will be added here dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="quantityInput">Quantity</label>
+              <input type="number" id="quantityInput" class="form-control" min="1" required>
+            </div>
+            <div class="form-group">
+              <label for="referenceInput">Reference (Optional)</label>
+              <input type="text" id="referenceInput" class="form-control" placeholder="PO number, shipment ID, etc.">
+            </div>
+            <div class="form-group">
+              <label for="notesInput">Notes (Optional)</label>
+              <textarea id="notesInput" class="form-control" placeholder="Additional details about this transaction"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" id="cancelTransactionBtn">Cancel</button>
+          <button type="submit" class="btn primary" id="saveTransactionBtn">Save Transaction</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 3PL Management System: A product of Spantik Inc.</p>
+  </footer>
+  
+  <script src="transactions.js"></script>
+</body>
+</html>

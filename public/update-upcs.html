@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update UPCs | 3PL Management System | Spantik Inc.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .upc-form {
+      margin-top: 2rem;
+    }
+    .product-list {
+      margin-top: 2rem;
+    }
+    .product-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      align-items: center;
+    }
+    .product-item:last-child {
+      border-bottom: none;
+    }
+    .header-row {
+      font-weight: bold;
+      background-color: var(--bg-color);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <h1 class="app-title">3PL Management System</h1>
+        <p class="app-subtitle">Spantik Inc.</p>
+      </div>
+      <nav class="main-nav">
+  <ul style="display: flex; list-style: none; gap: 2rem; margin: 0; padding: 0;">
+    <li><a href="index.html" class="active" style="color: #4f46e5; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Dashboard</a></li>
+    <li><a href="transactions.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Transactions</a></li>
+    <li><a href="barcode-scan.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Barcode Scanner</a></li>
+    <li><a href="update-upcs.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Update UPCs</a></li>
+    <li><a href="clients.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Clients</a></li>
+  </ul>
+</nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Update Product UPCs</h1>
+    
+    <section class="products-container">
+      <div class="container-header">
+        <h2>Products Without UPCs</h2>
+      </div>
+      
+      <div class="product-list">
+        <div class="product-item header-row">
+          <div>Product Name</div>
+          <div>SKU</div>
+          <div>Current UPC</div>
+          <div>Actions</div>
+        </div>
+        <div id="productsList">
+          <!-- Products will be added here dynamically -->
+          <div class="loading">Loading products...</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- UPC Update Modal -->
+    <div id="upcModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Update UPC</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="upcForm">
+            <input type="hidden" id="productId">
+            <div class="form-group">
+              <label>Product Name:</label>
+              <div id="productNameDisplay" style="font-weight: bold;"></div>
+            </div>
+            <div class="form-group">
+              <label>SKU:</label>
+              <div id="productSkuDisplay"></div>
+            </div>
+            <div class="form-group">
+              <label for="upcInput">UPC Code:</label>
+              <input type="text" id="upcInput" class="form-control" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" id="cancelBtn">Cancel</button>
+          <button type="button" class="btn primary" id="saveUpcBtn">Save UPC</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 3PL Management System: A product of Spantik Inc.</p>
+  </footer>
+  
+  <script>
+    // DOM Elements
+    const productsList = document.getElementById('productsList');
+    const upcModal = document.getElementById('upcModal');
+    const productIdInput = document.getElementById('productId');
+    const productNameDisplay = document.getElementById('productNameDisplay');
+    const productSkuDisplay = document.getElementById('productSkuDisplay');
+    const upcInput = document.getElementById('upcInput');
+    const saveUpcBtn = document.getElementById('saveUpcBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const closeModalBtn = document.querySelector('#upcModal .close-btn');
+    
+    // API URL
+    const PRODUCTS_API_URL = '/api/products';
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', fetchProducts);
+    saveUpcBtn.addEventListener('click', saveUpc);
+    cancelBtn.addEventListener('click', closeModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    
+    // Functions
+    async function fetchProducts() {
+      try {
+        const response = await fetch(PRODUCTS_API_URL);
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const products = await response.json();
+        renderProducts(products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        productsList.innerHTML = `<div class="error">Error loading products: ${error.message}</div>`;
+      }
+    }
+    
+    function renderProducts(products) {
+      if (products.length === 0) {
+        productsList.innerHTML = '<div>No products found.</div>';
+        return;
+      }
+      
+      productsList.innerHTML = '';
+      
+      products.forEach(product => {
+        const div = document.createElement('div');
+        div.className = 'product-item';
+        
+        div.innerHTML = `
+          <div>${product.name}</div>
+          <div>${product.sku}</div>
+          <div>${product.upc || 'Not set'}</div>
+          <div>
+            <button class="btn primary update-upc-btn" data-id="${product._id}" 
+                    data-name="${product.name}" data-sku="${product.sku}" 
+                    data-upc="${product.upc || ''}">
+              Update UPC
+            </button>
+          </div>
+        `;
+        
+        productsList.appendChild(div);
+      });
+      
+      // Add event listeners to buttons
+      document.querySelectorAll('.update-upc-btn').forEach(btn => {
+        btn.addEventListener('click', () => showUpcModal(
+          btn.dataset.id,
+          btn.dataset.name,
+          btn.dataset.sku,
+          btn.dataset.upc
+        ));
+      });
+    }
+    
+    function showUpcModal(productId, name, sku, currentUpc) {
+      productIdInput.value = productId;
+      productNameDisplay.textContent = name;
+      productSkuDisplay.textContent = sku;
+      upcInput.value = currentUpc;
+      
+      upcModal.classList.add('active');
+      upcInput.focus();
+    }
+    
+    function closeModal() {
+      upcModal.classList.remove('active');
+    }
+    
+    async function saveUpc() {
+      const productId = productIdInput.value;
+      const upc = upcInput.value.trim();
+      
+      if (!productId || !upc) {
+        alert('Please enter a UPC code');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${PRODUCTS_API_URL}/${productId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ upc })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to update product');
+        }
+        
+        closeModal();
+        alert('UPC updated successfully');
+        fetchProducts(); // Refresh the list
+      } catch (error) {
+        console.error('Error updating UPC:', error);
+        alert('Error updating UPC: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>

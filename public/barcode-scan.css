@@ -1,0 +1,112 @@
+/* Barcode Scanner specific styles */
+
+.scanner-container {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.scanner-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scanner-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--bg-color);
+}
+
+.scanner-input-area {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.barcode-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.25rem;
+  text-align: center;
+  margin: 1rem 0;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.barcode-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  outline: none;
+}
+
+.barcode-input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.scanner-status {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-top: 0.5rem;
+}
+
+.session-active .scanner-input-container {
+  border-color: var(--primary-color);
+}
+
+.session-active .scanner-status {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.session-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background-color: white;
+  cursor: pointer;
+}
+
+.quantity-btn:hover {
+  background-color: var(--bg-color);
+}
+
+.quantity-display {
+  width: 2.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.flash {
+  animation: flash-animation 0.5s;
+}
+
+@keyframes flash-animation {
+  0% { background-color: var(--bg-color); }
+  50% { background-color: rgba(79, 70, 229, 0.2); }
+  100% { background-color: var(--bg-color); }
+}

@@ -1,0 +1,88 @@
+/* Transaction specific styles */
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.transaction-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.inbound {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.outbound {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.main-nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.main-nav a:hover {
+  color: var(--primary-color);
+}
+
+.main-nav a.active {
+  color: var(--primary-color);
+}
+
+.main-nav a.active:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+}
+
+.filter-controls select {
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background-color: white;
+  font-size: 0.875rem;
+}
+
+#transactionsTable .quantity-cell {
+  font-weight: 600;
+}
+
+.quantity-change {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-change .arrow {
+  font-size: 1.2rem;
+}
+
+.quantity-before, .quantity-after {
+  color: var(--text-light);
+}

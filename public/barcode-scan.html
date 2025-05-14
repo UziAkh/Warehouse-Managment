@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barcode Scanner | 3PL Management System | Spantik Inc.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="barcode-scan.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <h1 class="app-title">3PL Management System</h1>
+        <p class="app-subtitle">Spantik Inc.</p>
+      </div>
+      <nav class="main-nav">
+  <ul style="display: flex; list-style: none; gap: 2rem; margin: 0; padding: 0;">
+    <li><a href="index.html" class="active" style="color: #4f46e5; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Dashboard</a></li>
+    <li><a href="transactions.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Transactions</a></li>
+    <li><a href="barcode-scan.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Barcode Scanner</a></li>
+    <li><a href="update-upcs.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Update UPCs</a></li>
+    <li><a href="clients.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Clients</a></li>
+  </ul>
+</nav>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Barcode Scanner</h1>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-title">Active Session</div>
+        <div class="stat-value" id="sessionStatus">Not Started</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Items Scanned</div>
+        <div class="stat-value" id="itemsScanned">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Total Quantity</div>
+        <div class="stat-value" id="totalQuantity">0</div>
+      </div>
+    </div>
+
+    <section class="scanner-container">
+      <div class="scanner-controls">
+        <button id="startSessionBtn" class="btn primary">Start New Session</button>
+        <button id="endSessionBtn" class="btn danger" disabled>End Session</button>
+      </div>
+
+      <div class="scanner-input-container">
+        <div class="scanner-input-area">
+          <label for="upcInput">Scan or Enter UPC:</label>
+          <input type="text" id="upcInput" class="barcode-input" placeholder="Ready to scan..." disabled>
+          <p class="scanner-status">Session not started</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-container">
+      <div class="container-header">
+        <h2>Scanned Items</h2>
+        <div class="session-controls">
+          <button id="clearItemsBtn" class="btn secondary" disabled>Clear Items</button>
+          <button id="saveAllBtn" class="btn primary" disabled>Save All Items</button>
+        </div>
+      </div>
+      
+      <div class="responsive-table">
+        <table id="scannedItemsTable">
+          <thead>
+            <tr>
+              <th>UPC</th>
+              <th>Product Name</th>
+              <th>SKU</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="scannedItemsTableBody">
+            <!-- Scanned items will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="empty-state" id="noItemsScanned">
+        <div class="empty-icon">📦</div>
+        <h3 class="empty-title">No items scanned</h3>
+        <p class="empty-description">Start a session and scan items to record them.</p>
+      </div>
+
+      <!-- New Product Modal -->
+      <div id="newProductModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">New Product Detected</h2>
+            <button class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>UPC <strong id="newUpcDisplay"></strong> was not found in the system. Add product details:</p>
+            <form id="newProductForm">
+              <div class="form-group">
+                <label for="newProductName">Product Name</label>
+                <input type="text" id="newProductName" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="newProductSku">SKU</label>
+                <input type="text" id="newProductSku" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="newProductDescription">Description (Optional)</label>
+                <textarea id="newProductDescription" class="form-control"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn secondary" id="cancelNewProductBtn">Cancel</button>
+            <button type="button" class="btn primary" id="saveNewProductBtn">Add Product</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 3PL Management System: A product of Spantik Inc.</p>
+  </footer>
+  
+  <script src="barcode-scan.js"></script>
+</body>
+</html>

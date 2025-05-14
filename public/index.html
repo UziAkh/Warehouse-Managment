@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3PL Management System | Spantik Inc.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+  <div class="header-content">
+    <div>
+      <h1 class="app-title">3PL Management System</h1>
+      <p class="app-subtitle">Spantik Inc.</p>
+    </div>
+    <nav class="main-nav">
+  <ul style="display: flex; list-style: none; gap: 2rem; margin: 0; padding: 0;">
+    <li><a href="index.html" class="active" style="color: #4f46e5; text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Dashboard</a></li>
+    <li><a href="transactions.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Transactions</a></li>
+    <li><a href="barcode-scan.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Barcode Scanner</a></li>
+    <li><a href="update-upcs.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Update UPCs</a></li>
+    <li><a href="clients.html" style="text-decoration: none; font-weight: 500; padding: 0.5rem 0; position: relative;">Clients</a></li>
+  </ul>
+</nav>
+  </div>
+</header>
+  <main>
+    <h1 class="page-title">Inventory Dashboard</h1>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-title">Total Products</div>
+        <div class="stat-value" id="totalProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Total Quantity</div>
+        <div class="stat-value" id="totalQuantity">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Low Stock Items</div>
+        <div class="stat-value" id="lowStockCount">0</div>
+      </div>
+    </div>
+
+    <section class="controls">
+      <button id="addProductBtn" class="btn primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add New Product
+      </button>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search products...">
+        <button id="searchBtn" class="btn secondary">Search</button>
+      </div>
+    </section>
+
+    <section class="products-container">
+      <div class="container-header">
+        <h2>Products Inventory</h2>
+      </div>
+      
+      <div class="loading-container" id="loadingIndicator">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Loading inventory data...
+        </div>
+      </div>
+      
+      <div class="responsive-table">
+        <table id="productsTable">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Client</th>
+              <th>SKU</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <!-- Products will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="empty-state hidden" id="noProducts">
+        <div class="empty-icon">📦</div>
+        <h3 class="empty-title">No products found</h3>
+        <p class="empty-description">There are no products in your inventory yet. Add your first product to get started.</p>
+        <button class="btn primary" id="emptyStateAddBtn">Add First Product</button>
+      </div>
+    </section>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Add New Product</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="productForm">
+            <input type="hidden" id="productId">
+            <div class="form-group">
+              <label for="productName">Product Name</label>
+              <input type="text" id="productName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="productSku">SKU</label>
+              <input type="text" id="productSku" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="productDescription">Description</label>
+              <textarea id="productDescription" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="productQuantity">Quantity</label>
+              <input type="number" id="productQuantity" class="form-control" min="0" required>
+            </div>
+            <div class="form-group">
+            <label for="productClient">Client *</label>
+            <select id="productClient" class="form-control" required>
+            <option value="">Select a client</option>
+    <!-- Clients will be populated dynamically -->
+  <       /select>
+        </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn primary" id="saveProductBtn">Save Product</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Confirm Deletion</h2>
+          <button class="close-btn" id="closeDeleteBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this product? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" id="cancelDeleteBtn">Cancel</button>
+          <button type="button" class="btn danger" id="confirmDeleteBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 3PL Management System: A product of Spantik Inc.</p>
+  </footer>
+  
+  <script src="app.js"></script>
+</body>
+</html>

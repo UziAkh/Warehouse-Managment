@@ -1,0 +1,77 @@
+/* Client Management specific styles */
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group.half {
+  flex: 1 0 calc(50% - 0.5rem);
+}
+
+.form-group.third {
+  flex: 1 0 calc(33% - 0.5rem);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.client-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-inactive {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.warning {
+  color: #b91c1c;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.large-modal {
+  max-width: 800px;
+  width: 90%;
+}
+
+.client-action-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.product-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+}
+
+.product-count.has-products {
+  background-color: #4f46e5;
+  color: white;
+}

@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+// Import routes
 const productRoutes = require('./routes/productRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const clientRoutes = require('./routes/clientRoutes');
@@ -15,31 +16,39 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from public directory
+// Simple test route
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+});
+
+// Serve static files
 app.use(express.static('public'));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  // Add these options to improve connection reliability
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => {
-  console.error('MongoDB connection error:', err);
-  // Log more detailed error information
-  if (err.name === 'MongooseServerSelectionError') {
-    console.error('Could not select MongoDB server. Check network or MongoDB Atlas status.');
-  }
+// Register API routes
+app.use('/api', productRoutes);
+app.use('/api', transactionRoutes);
+app.use('/api', clientRoutes);
+
+// Default route
+app.get('/', (req, res) => {
+  res.send('Server is working! Try accessing /index.html');
 });
 
-// Add this to monitor connection issues
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-});
+// Connect to MongoDB and start server
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    
+    // Start the server after MongoDB connects
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    console.error('Server not started due to database connection failure');
+  });
 
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
-});
+// MongoDB connection error handling

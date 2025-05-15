@@ -1,0 +1,20 @@
+cat > .gitignore << 'EOL'
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Mac specific files
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+EOL

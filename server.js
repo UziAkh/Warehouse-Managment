@@ -29,4 +29,17 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => {
   console.error('MongoDB connection error:', err);
-  // Log mor
+  // Log more detailed error information
+  if (err.name === 'MongooseServerSelectionError') {
+    console.error('Could not select MongoDB server. Check network or MongoDB Atlas status.');
+  }
+});
+
+// Add this to monitor connection issues
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});

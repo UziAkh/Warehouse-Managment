@@ -52,3 +52,10 @@ mongoose
   });
 
 // MongoDB connection error handling
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error after initial connection:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
